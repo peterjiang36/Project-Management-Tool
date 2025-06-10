@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management Tool Decision - Executive Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .recommendation-box {
+            background: #047c36;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3);
+        }
+
+        .recommendation-box h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .recommendation-box li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .recommendation-box li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tool-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .tool-card.recommended {
+            border-left-color: #27ae60;
+            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%);
+        }
+
+        .tool-card.alternative {
+            border-left-color: #3498db;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e1f0ff 100%);
+        }
+
+        .tool-card.basic {
+            border-left-color: #95a5a6;
+        }
+
+        .tool-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+
+        .features {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .features li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .features li.pro::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .features li.con::before {
+            content: "✗";
+            position: absolute;
+            left: 0;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .dashboard-preview {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .dashboard-title {
+            color: #3498db;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-green { background-color: #27ae60; }
+        .status-yellow { background-color: #f1c40f; }
+        .status-red { background-color: #e74c3c; }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        .stars {
+            color: #f1c40f;
+            font-size: 1.1rem;
+        }
+
+        .roi-section {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .roi-section h3 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .roi-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .roi-item .number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .cta-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: white;
+            color: #e74c3c;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .UI {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-preview {
+                font-size: 0.8rem;
+            }
+        }
+
+        .tab-container {
+            margin: 30px 0;
+        }
+
+        .tabs {
+            display: flex;
+            background: #ecf0f1;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            background: #bdc3c7;
+            color: #2c3e50;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .tab-content {
+            background: white;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Project Management Tool Comparison</h1>
+            <p>Project Tracking & Leadership Reporting</p>
+        </div>
+
+        
+
+        <div class="content">
+          <div class="recommendation-box">
+                <h2>📊 Bottom Line Recommendation</h2>
+                <p><strong>Microsoft Planner (FREE - basic functions already included)</strong> for immediate implementation</p>
+                <p><strong>Asana Free Plan (FREE - up to 10 users)</strong> basic task management only, insufficient for management reporting</p>
+                <p><strong>ClickUp Unlimited Plan ($10/user/month)</strong> for comprehensive reporting</p>
+                <p><strong>Monday Basic Plan ($13/user/month)</strong> for best senior leadership visibility</p>
+            </div>
+
+            <h2>🏆 Project Management & Reporting Comparison</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Tool</th>
+                        <th>Cost per User/Month</th>
+                        <th>Project Tracking</th>
+                        <th>Executive Dashboards</th>
+                        <th>Individual Reports</th>
+                        <th>Team Overview</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background-color: #e8f5e8;">
+                        <td><strong>Monday.com</strong></td>
+                        <td><strong>$13/user</strong></td>
+                        <td><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                        <td><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                        <td><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                        <td><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    </tr>
+                    <tr style="background-color: #e1f0ff;">
+                        <td><strong>ClickUp</strong></td>
+                        <td><strong>$10/user</strong></td>
+                        <td><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                        <td><span class="stars">⭐⭐⭐⭐</span></td>
+                        <td><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                        <td><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    </tr>
+                    <tr>
+                        <td>Asana</td>
+                        <td>FREE</td>
+                        <td><span class="stars">⭐⭐⭐⭐</span></td>
+                        <td><span class="stars"></span></td>
+                        <td><span class="stars">⭐⭐⭐</span></td>
+                        <td><span class="stars">⭐⭐⭐</span></td>
+                    </tr>
+                    <tr>
+                        <td>Microsoft</td>
+                        <td>FREE</td>
+                        <td><span class="stars">⭐⭐⭐</span></td>
+                        <td><span class="stars"></span></td>
+                        <td><span class="stars">⭐⭐</span></td>
+                        <td><span class="stars">⭐⭐⭐</span></td>
+                    </tr>
+                </tbody>
+            </table>
+          
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('clickup')">ClickUp UI</button>
+                    <button class="tab" onclick="showTab('monday')">Monday UI</button>
+                    <button class="tab" onclick="showTab('microsoft')">Microsoft UI</button>
+                    <button class="tab" onclick="showTab('asana')">Asana UI</button>
+                    <button class="tab" onclick="showTab('clickupDash')">ClickUp Report Dashboard</button>
+                    <button class="tab" onclick="showTab('mondaydDash')">Monday Report Dashboard</button>
+                </div>
+                
+                <div id="clickup" class="tab-pane active">
+                    <div class="dashboard-preview">
+                        <a>
+                            <img class="UI" src="Assets/ClickUp UI.png" alt="ClickUp UI">
+                        </a>
+                    </div>
+                </div>
+                
+                <div id="monday" class="tab-pane">
+                    <div class="dashboard-preview">
+                        <a>
+                            <img class="UI" src="Assets/Monday UI.png" alt="Monday UI">
+                        </a>
+                    </div>
+                </div>
+
+                <div id="microsoft" class="tab-pane">
+                    <div class="dashboard-preview">
+                        <a>
+                            <img class="UI" src="Assets/Microsoft Planner UI.png" alt="Monday UI">
+                        </a>
+                    </div>
+                </div>
+
+                <div id="asana" class="tab-pane">
+                    <div class="dashboard-preview">
+                        <a>
+                            <img class="UI" src="Assets/Asana UI.png" alt="Monday UI">
+                        </a>
+                    </div>
+                </div>
+                
+                <div id="clickupDash" class="tab-pane">
+                    <div class="dashboard-preview">
+                        <a>
+                            <img class="UI" src="Assets/ClickUp Dashboard.png" alt="Monday UI">
+                        </a>
+                    </div>
+                </div>
+        
+                <div id="mondaydDash" class="tab-pane">
+                    <div class="dashboard-preview">
+                        <a>
+                            <img class="UI" src="Assets/Monday Dashboard.png" alt="Monday UI">
+                        </a>
+                    </div>
+                </div><br>
+
+            <h2>💰 Price Comparison</h2>
+            <div class="comparison-grid">
+                <div class="tool-card recommended">
+                    <h3>🥇 ClickUp</h3>
+                    <div class="price">$10/user/month</div>
+                    <p><strong>Most Comprehensive Reporting</strong></p>
+                    <ul class="features">
+                        <li class="pro">30+ widget types for custom executive views</li>
+                        <li class="pro">Advanced individual workload reports</li>
+                        <li class="pro">Time tracking integration</li>
+                        <li class="pro">Goal tracking and OKR integration</li>
+                        <li class="pro">Lower cost with more features</li>
+                        <li class="con">Steeper learning curve</li>
+                    </ul>
+                </div>
+
+                <div class="tool-card alternative">
+                    <h3>🥈 Monday</h3>
+                    <div class="price">$13/user/month</div>
+                    <p><strong>Best for Executive Visibility</strong></p>
+                    <ul class="features">
+                        <li class="pro">Executive Dashboard with real-time overview</li>
+                        <li class="pro">Individual Workload View for each person</li>
+                        <li class="pro">Visual Red/Yellow/Green status indicators</li>
+                        <li class="pro">Automated weekly reports to senior leadership</li>
+                        <li class="pro">Most intuitive interface for adoption</li>
+                        <li class="con">Higher cost than ClickUp</li>
+                    </ul>
+                </div>
+                <div class="tool-card basic">
+                    <h3>🆓Microsoft Free</h3>
+                    <div class="price">$0/user/month</div>
+                    <p><strong>Insufficient for Senior Leadership</strong></p>
+                    <ul class="features">
+                        <li class="con">No portfolio-level project overview</li>
+                        <li class="con">Limited cross-team visibility and reporting</li>
+                        <li class="con">No advanced analytics or performance metrics</li>
+                        <li class="con">Basic task management without strategic insights</li>
+                        <li class="pro">Integrated with Microsoft 365 ecosystem</li>
+                        <li class="pro">Suitable for small team task coordination</li>
+                    </ul>
+                </div>
+
+                <div class="tool-card basic">
+                    <h3>🆓 Asana Free</h3>
+                    <div class="price">$0/user/month</div>
+                    <p><strong>Insufficient for Senior Leadership</strong></p>
+                    <ul class="features">
+                        <li class="con">No executive dashboard or portfolio view</li>
+                        <li class="con">Cannot see team-wide project status</li>
+                        <li class="con">No individual performance tracking</li>
+                        <li class="con">Limited reporting for senior leadership</li>
+                        <li class="pro">Good for basic task tracking only</li>
+                        <li class="pro">Works well for 10 users (free limit)</li>
+                    </ul>
+                </div>
+            </div><br>
+
+
+            <h2>📊 Detailed Strengths & Weaknesses Analysis</h2>
+                <div style="margin: 20px 0;">
+                <h3 style="color: #3498db; margin-bottom: 20px;">🥇 ClickUp - Most Comprehensive Reporting</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">✅ Strengths</th>
+                            <th style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">❌ Weaknesses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Advanced Analytics & Reporting</strong><br>
+                                • Detailed individual workload and efficiency tracking<br>
+                                • Time tracking integration with performance metrics
+                            </td>
+                            <td>
+                                <strong>Complexity & Learning Curve</strong><br>
+                                • Steep learning curve for team adoption<br>
+                                • Too many features can distract from core PM
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>All-in-One Platform Value</strong><br>
+                                • $10/user/month - best feature-to-price ratio<br>
+                                • Combines docs, tasks, chat, goals in one platform<br>
+                            </td>
+                            <td>
+                                <strong>Performance & Reliability</strong><br>
+                                • Can be buggy and slow with large datasets<br>
+                                • Loading times can impact user experience
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Comprehensive Feature Set</strong><br>
+                                • Goal tracking and OKR integration<br>
+                                • Custom fields and unlimited customization options
+                            </td>
+                            <td>
+                                <strong>User Experience Challenges</strong><br>
+                                • Not as intuitive as Monday.com for executives<br>
+                                • Can overwhelm users who just need basic PM
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="margin: 30px 0;">
+                <h3 style="color: #27ae60; margin-bottom: 20px;">🥈 Monday - Best for Management Visibility</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">✅ Strengths</th>
+                            <th style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">❌ Weaknesses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Executive Dashboard Excellence</strong><br>
+                                • One-click view of all team members and projects<br>
+                                • Automated weekly reports to senior leadership
+                            </td>
+                            <td>
+                                <strong>Higher Cost</strong><br>
+                                • $13/user/month<br>
+                                • More expensive than ClickUp alternative<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>User Experience & Adoption</strong><br>
+                                • Most intuitive interface for quick team adoption<br>
+                                • Excellent mobile app for on-the-go access
+                            </td>
+                            <td>
+                                <strong>Feature Limitations</strong><br>
+                                • Less comprehensive than ClickUp's feature set<br>
+                                • Learning curve for advanced customizations
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Senior Leadership Features</strong><br>
+                                • Portfolio management with Red/Yellow/Green status<br>
+                                • Individual workload visualization<br>
+                            </td>
+                            <td>
+                                <strong>Integration Complexity</strong><br>
+                                • Less flexible than all-in-one solutions<br>
+                                • Can become expensive with scaling
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <h3 style="color: #95a5a6; margin-bottom: 20px;">🆓 Microsoft -  Basic Coordination with Enterprise Gaps</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">✅ Strengths</th>
+                            <th style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">❌ Weaknesses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Microsoft 365 Integration</strong><br>
+                                • Seamless integration with Teams, Outlook, and SharePoint<br>
+                                • Included free with Microsoft 365 Business Basic<br>
+                            </td>
+                            <td>
+                                <strong>Limited Reporting & Analytics</strong><br>
+                                • No executive dashboards or portfolio views<br>
+                                • Basic charts only - no custom reporting<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Simple Task Organization</strong><br>
+                                • Easy task assignment and due date tracking<br>
+                                • Good for basic team coordination and workflows<br>
+                            </td>
+                            <td>
+                                <strong>No Advanced Project Management</strong><br>
+                                • Cannot handle complex project timelines<br>
+                                • No resource management or capacity planning<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Team Collaboration</strong><br>
+                                • File attachments and comments on tasks<br>
+                                •  Email notifications for task updates<br>
+                            </td>
+                            <td>
+                                <strong>Enterprise Limitations</strong><br>
+                                • Limited customization options for workflows<br>
+                                •  Cannot scale for large, complex projects or portfolios<br>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <h3 style="color: #95a5a6; margin-bottom: 20px;">🆓 Asana - Insufficient for Senior Leadership</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">✅ Strengths</th>
+                            <th style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">❌ Weaknesses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Cost & Accessibility</strong><br>
+                                • Completely free for up to 10 users<br>
+                                • No financial risk or commitment required<br>
+                            </td>
+                            <td>
+                                <strong>No Executive Reporting</strong><br>
+                                • No executive dashboard or portfolio overview<br>
+                                • Cannot track individual team member performance<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Basic Project Management</strong><br>
+                                • Good for individual task tracking<br>
+                                • Clean, intuitive interface for team members<br>
+                            </td>
+                            <td>
+                                <strong>Limited Senior Leadership Visibility</strong><br>
+                                • No team-wide project status overview<br>
+                                • Cannot see workload distribution across team<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Team Collaboration</strong><br>
+                                • Strong task assignment and communication features<br>
+                                • Easy team member onboarding
+                            </td>
+                            <td>
+                                <strong>Reporting Limitations</strong><br>
+                                • Advanced reports require paid upgrade<br>
+                                • No custom dashboard creation<br>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab panes
+            const panes = document.querySelectorAll('.tab-pane');
+            panes.forEach(pane => pane.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab pane
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Add smooth scrolling for any internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add animation on scroll
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.tool-card');
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const cardVisible = 150;
+                
+                if (cardTop < window.innerHeight - cardVisible) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // Initialize cards with starting position
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.tool-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            });
+        });
+    </script>
+</body>
+</html>
